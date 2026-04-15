@@ -1,0 +1,28 @@
+name: Nightly agent
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+      - name: Run catalog sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run python scripts/nightly_agent.py
+      - name: Commit catalog
+        run: |
+          git config user.name "catalog-sync-agent[bot]"
+          git config user.email "agent@service-catalog-sync"
+          git add -A
+          git diff --staged --quiet || git commit -m "chore(agent): catalog refresh $(date -u +%Y-%m-%d)"
+          git push
