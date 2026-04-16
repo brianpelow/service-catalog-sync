@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: service-catalog-sync
+  description: "Automated Backstage catalog hydration \u2014 scans repos, infers ownership\
+    \ and tech stack, keeps catalog fresh via CI."
+  annotations:
+    github.com/project-slug: brianpelow/service-catalog-sync
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/ci-cd: github-actions
+  tags:
+  - python
+spec:
+  type: service
+  lifecycle: experimental
+  owner: brianpelow
